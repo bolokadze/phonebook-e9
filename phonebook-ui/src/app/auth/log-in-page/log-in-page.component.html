@@ -1,0 +1,35 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div class="auth-form">
+    <span class="form-title">Registration</span>
+    <div class="form-input-block">
+      <label for="email"></label>
+      <span class="material-icons icon">email</span>
+      <input id="email" class="form-input" formControlName="email" placeholder="email..." name="email"/>
+      <div class="wrapper" *ngIf="f.email.errors && btnClicked">
+        <div class="message" *ngIf="f.email.errors.required">Email is required</div>
+        <div class="message" *ngIf="f.email.errors.pattern"> Invalid email</div>
+      </div>
+    </div>
+    <div class="form-input-block">
+      <label for="password"></label>
+      <span class="material-icons icon">lock</span>
+      <input class="form-input" formControlName="password" id="password"
+             type="password" placeholder="password... min 8, max 20" name="password"/>
+      <div class="wrapper" *ngIf="f.password.errors && btnClicked">
+        <div class="message" *ngIf="f.password.errors.required">Password is required</div>
+        <div class="message" *ngIf="f.password.errors.minlength">Password must be at least 8 characters</div>
+        <div class="message" *ngIf="f.password.errors.maxlength">Password must not be greater than 20 characters
+        </div>
+      </div>
+    </div>
+
+    <div class="form-action">
+      <div class="wrapper" *ngIf="errorMessage">
+        <div class="message">{{errorMessage}}</div>
+      </div>
+      <button class="form-button" type="submit"> LogIn</button>
+      <span><a routerLink="/user/forgot-password">Password forgot?</a></span>
+      <span><a routerLink="/user/register">Register?</a></span>
+    </div>
+  </div>
+</form>
