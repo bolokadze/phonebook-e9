@@ -11,7 +11,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 })
 export class LogInPageComponent implements OnInit {
 
-  errorMessage = ' Error';
+  errorMessage: string;
   form: FormGroup;
   btnClicked: boolean;
 
@@ -48,8 +48,17 @@ export class LogInPageComponent implements OnInit {
 
     this.userService.loginUser(user).subscribe(value => {
         this.router.navigate(['/home'], {relativeTo: this.route});
-        console.log(value)
       },
-      error => this.errorMessage = error.error.message);
+      error => this.errorMessage = this.getErrorMessage(error));
+  }
+
+  getErrorMessage(error: any) {
+    let message;
+    if (error.status === 0)
+      message = 'Server unavailable, try again later';
+    else
+      //TODO message = error.error.message
+      message = error.error.status;
+    return message;
   }
 }
