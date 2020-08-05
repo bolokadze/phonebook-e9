@@ -38,4 +38,8 @@ public class UserController {
     public void updatePass(@RequestBody @Valid UserResetPassDto passwordDto, @RequestParam(value = "token") String token) {
         userService.updatePassword(token, passwordDto.password);
     }
+
+    @GetMapping("/user")
+    public void gatUserHead() {
+    }
 }

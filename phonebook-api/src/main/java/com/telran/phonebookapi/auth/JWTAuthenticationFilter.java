@@ -1,9 +1,8 @@
 package com.telran.phonebookapi.auth;
 
+import com.auth0.jwt.JWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.telran.phonebookapi.dto.UserRegisterDto;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -13,13 +12,12 @@ import org.springframework.security.web.authentication.AbstractAuthenticationPro
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.Date;
+
+import static com.auth0.jwt.algorithms.Algorithm.HMAC512;
 
 public class JWTAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
     private final AuthenticationManager authenticationManager;
@@ -28,7 +26,7 @@ public class JWTAuthenticationFilter extends AbstractAuthenticationProcessingFil
     public JWTAuthenticationFilter(
             AuthenticationManager authenticationManager,
             ObjectMapper objectMapper) {
-        super(new AntPathRequestMatcher("/api/user/login", "POST"));
+        super(new AntPathRequestMatcher(FilterConstants.LOGIN, "POST"));
         this.authenticationManager = authenticationManager;
         this.objectMapper = objectMapper;
     }
@@ -55,19 +53,13 @@ public class JWTAuthenticationFilter extends AbstractAuthenticationProcessingFil
     protected void successfulAuthentication(HttpServletRequest req,
                                             HttpServletResponse res,
                                             FilterChain chain,
-                                            Authentication auth) throws IOException, ServletException {
+                                            Authentication auth) {
 
-        //TODO add normal secret from the app props
-        String token = Jwts.builder()
-                .setExpiration(new Date())
-                .setHeaderParam("username", ((User) auth.getPrincipal()).getUsername())
-                .signWith(SignatureAlgorithm.HS512, "secret".getBytes(StandardCharsets.UTF_8))
-                .compact();
+        String token = JWT.create()
+                .withSubject(((User) auth.getPrincipal()).getUsername())
+                .withExpiresAt(new Date(System.currentTimeMillis() + FilterConstants.EXPIRATION_TIME))
+                .sign(HMAC512(FilterConstants.SECRET.getBytes()));
 
-        Cookie cookie = new Cookie("at", token);
-        cookie.setHttpOnly(true);
-        res.addCookie(cookie);
-
-//        res.addHeader("Authorization", "Bearer " + token);
+        res.addHeader(FilterConstants.HEAD, FilterConstants.VALUE + token);
     }
 }

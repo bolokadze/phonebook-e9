@@ -13,6 +13,8 @@ import { ForgotPasswordPageComponent } from './auth/forgot-password-page/forgot-
 import { ForgotPasswordInfoPageComponent } from './auth/forgot-password-info-page/forgot-password-info-page.component';
 import { ResetPasswordPageComponent } from './auth/reset-password-page/reset-password-page.component';
 import { ResetPasswordInfoPageComponent } from './auth/reset-password-info-page/reset-password-info-page.component';
+import { LogInPageComponent } from './auth/log-in-page/log-in-page.component';
+import { AllContactsComponent } from './pages/all-contacts/all-contacts.component';
 
 
 @NgModule({
@@ -25,7 +27,9 @@ import { ResetPasswordInfoPageComponent } from './auth/reset-password-info-page/
     ForgotPasswordPageComponent,
     ForgotPasswordInfoPageComponent,
     ResetPasswordPageComponent,
-    ResetPasswordInfoPageComponent
+    ResetPasswordInfoPageComponent,
+    LogInPageComponent,
+    AllContactsComponent
   ],
   imports: [
     BrowserModule,
