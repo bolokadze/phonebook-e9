@@ -2,6 +2,7 @@ package com.telran.phonebookapi.auth;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.telran.phonebookapi.service.AuthUserDetailsService;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -34,6 +35,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                                 authenticationManager(),
                                 om),
                         UsernamePasswordAuthenticationFilter.class)
+                .addFilter(new JWTAuthorizationFilter(authenticationManager()))
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
 
